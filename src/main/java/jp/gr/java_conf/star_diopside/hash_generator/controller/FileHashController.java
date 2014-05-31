@@ -19,6 +19,8 @@ import jp.gr.java_conf.star_diopside.hash_generator.service.FileHashService;
 
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.dialog.DialogStyle;
+import org.controlsfx.dialog.Dialogs;
 
 @Named
 public class FileHashController implements Initializable {
@@ -63,6 +65,8 @@ public class FileHashController implements Initializable {
 
     @FXML
     private void compareHash() {
-        System.out.println(StringUtils.equalsIgnoreCase(generatedHashValue.getText(), compareHashValue.getText()));
+        boolean result = StringUtils.equalsIgnoreCase(generatedHashValue.getText(), compareHashValue.getText());
+        Dialogs.create().style(DialogStyle.NATIVE).owner(fileName.getScene().getWindow()).title("Result")
+                .message(Boolean.toString(result)).showInformation();
     }
 }
