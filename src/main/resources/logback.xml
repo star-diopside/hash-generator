@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+    <property name="LOG_DIR" value="${user.home}/log/hash-generator/main" />
+
+    <!-- Error Log Appender -->
+    <appender name="errorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/error.log</file>
+        <append>true</append>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS},%level,%thread,%logger,%message%n]]></pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <minIndex>1</minIndex>
+            <maxIndex>9</maxIndex>
+            <fileNamePattern>${LOG_DIR}/error.%i.log</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!-- Trace Log Appender -->
+    <appender name="traceLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/trace.log</file>
+        <append>true</append>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS},%level,%thread,%logger,%message%n]]></pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <minIndex>1</minIndex>
+            <maxIndex>9</maxIndex>
+            <fileNamePattern>${LOG_DIR}/trace.%i.log</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!-- Logger Setting -->
+    <logger name="jp.gr.java_conf.star_diopside.hash_generator" level="TRACE">
+        <appender-ref ref="traceLog" />
+    </logger>
+
+    <logger name="org.springframework.aop.interceptor.CustomizableTraceInterceptor" level="TRACE">
+        <appender-ref ref="traceLog" />
+    </logger>
+
+    <!-- Root Logger Setting -->
+    <root level="ERROR">
+        <appender-ref ref="errorLog" />
+    </root>
+
+</configuration>

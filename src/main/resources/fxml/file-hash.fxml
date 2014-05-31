@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.gr.java_conf.star_diopside.hash_generator.controller.FileHashController">
+    <center>
+        <GridPane hgap="8.0" vgap="8.0">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="320.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="NEVER" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints prefHeight="8.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="ハッシュアルゴリズム:" />
+                <ChoiceBox fx:id="digestAlgorithm" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                <Label text="ファイル名:" GridPane.rowIndex="1" />
+                <TextField fx:id="fileName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Button mnemonicParsing="false" onAction="#selectFile" prefWidth="80.0" text="選択" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                <Label text="生成したハッシュ値:" GridPane.rowIndex="3" />
+                <TextField fx:id="generatedHashValue" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Button mnemonicParsing="false" onAction="#generateHash" prefWidth="80.0" text="生成" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <Label text="比較するハッシュ値:" GridPane.rowIndex="4" />
+                <TextField fx:id="compareHashValue" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Button mnemonicParsing="false" onAction="#compareHash" prefWidth="80.0" text="比較" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            </children>
+        </GridPane>
+    </center>
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+    </padding>
+</BorderPane>

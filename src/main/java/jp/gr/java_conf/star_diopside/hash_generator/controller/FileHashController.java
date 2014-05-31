@@ -1,0 +1,68 @@
+package jp.gr.java_conf.star_diopside.hash_generator.controller;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import jp.gr.java_conf.star_diopside.hash_generator.service.FileHashService;
+
+import org.apache.commons.codec.digest.MessageDigestAlgorithms;
+import org.apache.commons.lang3.StringUtils;
+
+@Named
+public class FileHashController implements Initializable {
+
+    @Inject
+    private FileHashService fileHashService;
+
+    @FXML
+    private ChoiceBox<String> digestAlgorithm;
+
+    @FXML
+    private TextField fileName;
+
+    @FXML
+    private TextField generatedHashValue;
+
+    @FXML
+    private TextField compareHashValue;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        digestAlgorithm.setItems(FXCollections.observableArrayList(MessageDigestAlgorithms.MD2,
+                MessageDigestAlgorithms.MD5, MessageDigestAlgorithms.SHA_1, MessageDigestAlgorithms.SHA_256,
+                MessageDigestAlgorithms.SHA_384, MessageDigestAlgorithms.SHA_512));
+        digestAlgorithm.setValue(MessageDigestAlgorithms.SHA_256);
+    }
+
+    @FXML
+    private void selectFile() {
+        FileChooser chooser = new FileChooser();
+        File file = chooser.showOpenDialog(fileName.getScene().getWindow());
+        if (file != null) {
+            fileName.setText(file.toString());
+        }
+    }
+
+    @FXML
+    private void generateHash() {
+        generatedHashValue.setText(fileHashService.generateFileHashString(Paths.get(fileName.getText()),
+                digestAlgorithm.getValue()));
+    }
+
+    @FXML
+    private void compareHash() {
+        System.out.println(StringUtils.equalsIgnoreCase(generatedHashValue.getText(), compareHashValue.getText()));
+    }
+}
