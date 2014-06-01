@@ -2,6 +2,8 @@ package jp.gr.java_conf.star_diopside.hash_generator.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
@@ -51,6 +53,7 @@ public class FileHashController implements Initializable {
     @FXML
     private void selectFile() {
         FileChooser chooser = new FileChooser();
+        chooser.setInitialFileName(fileName.getText());
         File file = chooser.showOpenDialog(fileName.getScene().getWindow());
         if (file != null) {
             fileName.setText(file.toString());
@@ -59,8 +62,13 @@ public class FileHashController implements Initializable {
 
     @FXML
     private void generateHash() {
-        generatedHashValue.setText(fileHashService.generateFileHashString(Paths.get(fileName.getText()),
-                digestAlgorithm.getValue()));
+        Path path = Paths.get(fileName.getText());
+        if (Files.isReadable(path) && !Files.isDirectory(path)) {
+            generatedHashValue.setText(fileHashService.generateFileHashString(path, digestAlgorithm.getValue()));
+        } else {
+            Dialogs.create().style(DialogStyle.NATIVE).owner(fileName.getScene().getWindow()).title("Warning")
+                    .message("ファイルを読み込むことができません。").showWarning();
+        }
     }
 
     @FXML
