@@ -22,7 +22,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/file-hash.fxml"));
-        loader.setControllerFactory(clazz -> applicationContext.getBean(clazz));
+        loader.setControllerFactory(applicationContext::getBean);
 
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
