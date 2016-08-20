@@ -5,30 +5,37 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Security;
 import java.util.ResourceBundle;
-
-import javafx.collections.FXCollections;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import jp.gr.java_conf.star_diopside.hash_generator.service.FileHashService;
+import org.springframework.context.support.MessageSourceAccessor;
 
-import org.apache.commons.codec.digest.MessageDigestAlgorithms;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.dialog.DialogStyle;
-import org.controlsfx.dialog.Dialogs;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import jp.gr.java_conf.star_diopside.hash_generator.model.FileHashModel;
+import jp.gr.java_conf.star_diopside.hash_generator.service.FileHashService;
 
 @Named
 public class FileHashController implements Initializable {
 
     @Inject
+    private FileHashModel model;
+
+    @Inject
     private FileHashService fileHashService;
+
+    @Inject
+    private MessageSourceAccessor messages;
 
     @FXML
     private ChoiceBox<String> digestAlgorithm;
@@ -42,39 +49,40 @@ public class FileHashController implements Initializable {
     @FXML
     private TextField compareHashValue;
 
+    @FXML
+    private Label compareResult;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        digestAlgorithm.setItems(FXCollections.observableArrayList(MessageDigestAlgorithms.MD2,
-                MessageDigestAlgorithms.MD5, MessageDigestAlgorithms.SHA_1, MessageDigestAlgorithms.SHA_256,
-                MessageDigestAlgorithms.SHA_384, MessageDigestAlgorithms.SHA_512));
-        digestAlgorithm.setValue(MessageDigestAlgorithms.SHA_256);
+        digestAlgorithm.setItems(FXCollections
+                .observableArrayList(Security.getAlgorithms("MessageDigest").stream().sorted().toArray(String[]::new)));
+        digestAlgorithm.valueProperty().bindBidirectional(model.digestAlgorithmProperty());
+        fileName.textProperty().bindBidirectional(model.fileNameProperty());
+        generatedHashValue.textProperty().bind(model.generatedHashValueProperty());
+        model.compareHashValueProperty().bind(compareHashValue.textProperty());
+        compareResult.textProperty().bind(model.compareResultProperty());
     }
 
     @FXML
     private void selectFile() {
         FileChooser chooser = new FileChooser();
-        chooser.setInitialFileName(fileName.getText());
+        chooser.setInitialFileName(model.getFileName());
         File file = chooser.showOpenDialog(fileName.getScene().getWindow());
         if (file != null) {
-            fileName.setText(file.toString());
+            model.setFileName(file.toString());
         }
     }
 
     @FXML
     private void generateHash() {
-        Path path = Paths.get(fileName.getText());
+        Path path = Paths.get(model.getFileName());
         if (Files.isReadable(path) && !Files.isDirectory(path)) {
-            generatedHashValue.setText(fileHashService.generateFileHashString(path, digestAlgorithm.getValue()));
+            model.setGeneratedHashValue(fileHashService.generateFileHashString(path, model.getDigestAlgorithm()));
         } else {
-            Dialogs.create().style(DialogStyle.NATIVE).owner(fileName.getScene().getWindow()).title("Warning")
-                    .message("ファイルを読み込むことができません。").showWarning();
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setHeaderText(null);
+            alert.setContentText(messages.getMessage("warning.fileNotAccess"));
+            alert.showAndWait();
         }
-    }
-
-    @FXML
-    private void compareHash() {
-        boolean result = StringUtils.equalsIgnoreCase(generatedHashValue.getText(), compareHashValue.getText());
-        Dialogs.create().style(DialogStyle.NATIVE).owner(fileName.getScene().getWindow()).title("Result")
-                .message(Boolean.toString(result)).showInformation();
     }
 }

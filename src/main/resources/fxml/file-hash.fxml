@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane stylesheets="@../stylesheet/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.gr.java_conf.star_diopside.hash_generator.controller.FileHashController">
+<BorderPane stylesheets="@../stylesheet/style.css" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.gr.java_conf.star_diopside.hash_generator.controller.FileHashController">
     <center>
         <GridPane hgap="8.0" vgap="8.0">
             <columnConstraints>
@@ -22,18 +27,18 @@
                 <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label text="ハッシュアルゴリズム:" />
+                <Label text="%label.digestAlgorithm" />
                 <ChoiceBox fx:id="digestAlgorithm" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                <Label text="ファイル名:" GridPane.rowIndex="1" />
+                <Label text="%label.fileName" GridPane.rowIndex="1" />
                 <TextField fx:id="fileName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button mnemonicParsing="false" onAction="#selectFile" prefWidth="80.0" text="選択" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Button mnemonicParsing="false" onAction="#selectFile" prefWidth="80.0" text="%button.select" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                 <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                <Label text="生成したハッシュ値:" GridPane.rowIndex="3" />
+                <Label text="%label.generatedHashValue" GridPane.rowIndex="3" />
                 <TextField fx:id="generatedHashValue" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Button mnemonicParsing="false" onAction="#generateHash" prefWidth="80.0" text="生成" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                <Label text="比較するハッシュ値:" GridPane.rowIndex="4" />
+                <Button mnemonicParsing="false" onAction="#generateHash" prefWidth="80.0" text="%button.generate" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <Label text="%label.compareHashValue" GridPane.rowIndex="4" />
                 <TextField fx:id="compareHashValue" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Button mnemonicParsing="false" onAction="#compareHash" prefWidth="80.0" text="比較" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                <Label fx:id="compareResult" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             </children>
         </GridPane>
     </center>
